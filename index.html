@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+
+</head>
+
+<body>
+
+  <script>
+    const socket = io('http://localhost:8080', {
+      query: { token: '1234' }
+    });
+
+    socket.on('connect', () => {
+      console.log('Conectado al servidor Socket.IO');
+      socket.emit('message', 'Hello from Socket.IO with query!');
+    });
+
+    socket.emit('message', 'Hello from Socket.IO!');
+
+    socket.on('disconnect', () => {
+      console.log('Desconectado del servidor Socket.IO');
+    });
+
+
+  </script>
+
+</body>
+
+</html>
