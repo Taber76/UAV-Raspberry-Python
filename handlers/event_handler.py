@@ -15,4 +15,5 @@ def register_handlers(socketio, socket_handler):
 
     @socketio.on('message')
     def handle_message(data):
+        print('Received:', data)
         socket_handler.receive(data)
