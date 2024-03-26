@@ -1,6 +1,7 @@
+# handlers/thermal.py
 import numpy as np
 
-from connections.thermal_connection import connect_thermal_camera
+from connections.thermal import connect_thermal_camera
 
 
 class thermal():

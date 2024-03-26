@@ -1,4 +1,4 @@
-# socket_handler.py
+# handlers/socket.py
 from flask_socketio import SocketIO, emit, disconnect
 from threading import Thread
 import time
