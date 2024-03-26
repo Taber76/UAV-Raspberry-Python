@@ -1,4 +1,4 @@
-# event_handler.py
+# handlers/event.py
 from flask import Flask, request
 from flask_socketio import send, emit
 
