@@ -14,6 +14,7 @@ class PixhawkController:
             cls._instance = super().__new__(cls)
             cls._instance.connected = False
             cls._instance.uav = None
+            cls._instance.client_socket_id = None
         return cls._instance
 
     def _get_uav_port(self):
