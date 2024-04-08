@@ -11,7 +11,6 @@ def send_beat_socket():
     data = {
         'uavname': 'PajaroLoco',
         'password': '123',
-        'jwt': '123'
     }
 
     try:
