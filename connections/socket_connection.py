@@ -1,3 +1,4 @@
+# connections/socket_connection.py
 from flask import Flask, jsonify
 import requests
 

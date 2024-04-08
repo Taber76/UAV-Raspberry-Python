@@ -1,7 +1,9 @@
+# connections/pixhawk_connection.py
 import serial
 import asyncio
 from serial.tools import list_ports
 import traceback
+import random
 
 from mavsdk import System
 
@@ -15,6 +17,7 @@ class PixhawkController:
             cls._instance.connected = False
             cls._instance.uav = None
             cls._instance.client_socket_id = None
+            cls._instance.uavpass = random.randint(10**9, 10**10 - 1)
         return cls._instance
 
     def _get_uav_port(self):

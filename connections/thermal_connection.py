@@ -1,9 +1,11 @@
+# connections/thermal_connection.py
 import board
 import busio
 import adafruit_mlx90640
 import numpy as np
 
 thermal_connected = False
+
 
 def connect_thermal_camera():
     global thermal_connected

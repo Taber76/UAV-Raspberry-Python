@@ -1,15 +1,16 @@
-# main.py
+# __main__.py
 
 # Server libraries
 import time
 import sys
 import signal
 import threading
+import asyncio
 
 # Modules
-from connections.socket import send_beat_socket
-from connections.pixhawk import PixhawkController
-from handlers.socket import websocket_connect
+from connections.socket_connection import send_beat_socket
+from connections.pixhawk_connection import PixhawkController
+from handlers.socket_handler import websocket_connect
 
 
 # Check internet connection
@@ -17,8 +18,8 @@ print('1. Checking internet connection...')
 
 # Connect to pixhawk
 print('2. Connecting to Pixhawk...')
-# uav = PixhawkController()
-# uav.connect()
+# uav_instance =PixhawkController()
+# uav_instance.connect()
 
 
 # Connect to socket
@@ -34,15 +35,17 @@ while not response:
 # Main
 def signal_handler(sig, frame):
     print('Exiting...')
-    thread.join(timeout=1)
-    thread._stop()
-    sys.exit(0)
+    # thread.join(timeout=1)
+    # thread._stop()
+    # sys.exit(0)
 
 
 if __name__ == '__main__':
-    signal.signal(signal.SIGINT, signal_handler)
-    thread = threading.Thread(target=websocket_connect)
-    thread.start()
+    # signal.signal(signal.SIGINT, signal_handler)
+    # thread = threading.Thread(target=websocket_connect)
+    # thread.start()
+
+    asyncio.run(websocket_connect())
 
     while True:
         time.sleep(1)
