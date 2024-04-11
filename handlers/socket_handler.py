@@ -5,22 +5,22 @@ import traceback
 from handlers.pixhawk_handler import pixhawk_handler_msg
 
 
-async def websocket_connect():
-    print(' Initiating websocket...')
+async def websocket_connect(uav_instance):
+    print(' --> Initiating websocket...')
 
     sio = socketio.AsyncClient()
 
     @sio.event
     def connect():
-        print(' Connecting to socket service...')
+        print(' --> Connecting to socket service...')
 
     @sio.event
     def authenticateduav(sid):
-        print(' Authenticated from service.')
+        print(' --> Authenticated from service.')
 
     @sio.event
     async def message(msg, socket_recipient_id):
-        await pixhawk_handler_msg(msg, socket_recipient_id, sio)
+        await pixhawk_handler_msg(msg, socket_recipient_id, sio, uav_instance)
 
     # @sio.event
     # def disconnect():
@@ -39,6 +39,6 @@ async def websocket_connect():
         await sio.wait()
 
     except Exception as e:
-        print("Error:", e)
+        print(" --> Error:", e)
         # intentar reconexion
         traceback.print_exc()

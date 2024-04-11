@@ -1,4 +1,4 @@
-# handlers/thermal_handler.py
+# controllers/thermal_controller.py
 import numpy as np
 
 from connections.thermal_connection import connect_thermal_camera

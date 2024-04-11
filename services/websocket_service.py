@@ -2,8 +2,6 @@
 from flask_sockets import Sockets
 import json
 
-jwt = 'pepe'
-
 
 def init_websocket(app, uav):
     sockets = Sockets(app)

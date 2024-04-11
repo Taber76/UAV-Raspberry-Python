@@ -1,4 +1,4 @@
-# connections/pixhawk_connection.py
+# controllers/pixhawk_controller.py
 import serial
 import asyncio
 from serial.tools import list_ports
