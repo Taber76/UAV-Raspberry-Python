@@ -29,15 +29,8 @@ async def pixhawk_handler_msg(msg, socket_recipient_id, sio, uav_instance):
             uav_instance.client_socket_id = None
 
         elif json_msg['type'] == 'heartbeat':
-            battery = await uav_instance.battery_check()
-            # await uav_instance.get_coordinates()
-            coordinates = (-54, -33, 10)
-            attitude = await uav_instance.get_attitude()
-            values = (battery,) + coordinates + attitude
-            keys_ = ["battery", "lat", "lon", "alt", "pitch", "roll", "yaw"]
-            response = {key: value for key, value in zip(keys_, values)}
-            response["type"] = "stauts"
-            await sio.emit('message', (json.dumps(response), uav_instance.client_socket_id))
+            status = uav_instance.get_status()
+            await sio.emit('message', (status, uav_instance.client_socket_id))
 
         elif json_msg['type'] == 'batteryCheck':
             print('TIPO BATERIA')

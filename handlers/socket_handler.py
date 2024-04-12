@@ -22,21 +22,23 @@ async def websocket_connect(uav_instance):
     async def message(msg, socket_recipient_id):
         await pixhawk_handler_msg(msg, socket_recipient_id, sio, uav_instance)
 
-    # @sio.event
-    # def disconnect():
-    #    print('Disconnected from server')
-    #    print('Attempting to reconnect...')
-    #    try:
-    #        sio.connect('https://uav-nextjs.onrender.com/api/socket')
-    #        sio.emit('authenticateuav', ('PajaroLoco', '123'))
-    #    except Exception as e:
-    #       print("Error:", e)
-    #        traceback.print_exc()
+    @sio.event
+    def disconnect():
+        print('Disconnected from server')
+        print('Attempting to reconnect...')
+        try:
+            sio.connect('https://uav-nextjs.onrender.com/api/socket')
+            sio.emit('authenticateuav', ('PajaroLoco', '123'))
+        except Exception as e:
+            print("Error:", e)
+            traceback.print_exc()
 
     try:
         await sio.connect('https://uav-nextjs.onrender.com/api/socket')
         await sio.emit('authenticateuav', ('PajaroLoco', '123'))
-        await sio.wait()
+
+        # timeoput = 20
+        # await asyncio.wait_for(sio.wait(), timeout)
 
     except Exception as e:
         print(" --> Error:", e)

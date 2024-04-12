@@ -3,6 +3,7 @@
 # Server libraries
 import time
 import asyncio
+import threading
 
 # Modules
 from connections.socket_connection import send_beat_socket
@@ -10,7 +11,21 @@ from controllers.pixhawk_controller import PixhawkController
 from handlers.socket_handler import websocket_connect
 
 
-async def main():
+async def task_200ms(uav_instance):
+    while True:
+        await uav_instance.update_task_500ms()
+        await asyncio.sleep(0.2)
+
+
+async def task_5000ms(uav_instance):
+    while True:
+        await uav_instance.update_task_5000ms()
+        await asyncio.sleep(5)
+
+
+async def start():
+    global uav_instance
+
     # Check internet connection
     print('1. Checking internet connection...')
 
@@ -29,10 +44,13 @@ async def main():
             time.sleep(5)
     await websocket_connect(uav_instance)
 
-    # Main loop
-    while True:
-        time.sleep(1)
+    return True
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    loop = asyncio.get_event_loop()
+    start_completed = loop.run_until_complete(start())
+    if start_completed:
+        loop.create_task(task_200ms(uav_instance))
+        loop.create_task(task_5000ms(uav_instance))
+        loop.run_forever()
