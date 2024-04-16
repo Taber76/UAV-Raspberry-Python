@@ -35,6 +35,7 @@ async def websocket_connect(uav_instance):
 
     try:
         await sio.connect('https://uav-nextjs.onrender.com/api/socket')
+        # await sio.connect('http://192.168.1.12:3000/api/socket')
         await sio.emit('authenticateuav', ('PajaroLoco', '123'))
 
         # timeoput = 20

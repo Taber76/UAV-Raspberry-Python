@@ -3,7 +3,6 @@
 # Server libraries
 import time
 import asyncio
-import threading
 
 # Modules
 from connections.socket_connection import send_beat_socket

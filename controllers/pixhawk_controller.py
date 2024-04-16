@@ -44,12 +44,6 @@ class PixhawkController:
             cls._instance.client_socket_id = None
             cls._instance.uavpass = random.randint(10**9, 10**10 - 1)
             cls._instance.uav_state = UAVState()
-            # cls._instance.update_task_500ms = asyncio.create_task(
-            #    cls._instance.update_task_500ms()
-            # )
-            # cls._instance.update_task_5000ms = asyncio.create_task(
-            #    cls._instance.update_task_5000ms()
-            # )
         return cls._instance
 
 # INITIALIZATION | CONNECTION --------------------------------------------------
@@ -71,14 +65,14 @@ class PixhawkController:
             try:
                 pix_port = self._get_uav_port()
                 if pix_port:
-                    print('--> UAV connecting')
-                    print('--> UAV in port ' + pix_port)
+                    print(' --> UAV connecting')
+                    print(' --> UAV in port ' + pix_port)
                     uav = System()
                     await uav.connect(system_address=f"serial://{pix_port}")
-                    print("--> Waiting for UAV to connect...")
+                    print(" --> Waiting for UAV to connect...")
                     async for state in uav.core.connection_state():
                         if state.is_connected:
-                            print(f"--> Connected to UAV!")
+                            print(f" --> Connected to UAV!")
                             self.connected = True
                             self.uav = uav
                             # await self.start()
@@ -104,9 +98,9 @@ class PixhawkController:
             "type": "status",
             "battery_voltage": self.uav_state.battery_voltage,
             "battery_percent": self.uav_state.battery_percent,
-            "latitude": self.uav_state.lat,
-            "longitude": self.uav_state.lon,
-            "altitude": self.uav_state.alt,
+            "lat": self.uav_state.lat,
+            "lon": self.uav_state.lon,
+            "alt": self.uav_state.alt,
             "pitch": self.uav_state.pitch,
             "roll": self.uav_state.roll,
             "yaw": self.uav_state.yaw,

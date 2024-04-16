@@ -19,12 +19,15 @@ async def pixhawk_handler_msg(msg, socket_recipient_id, sio, uav_instance):
             await sio.emit('message', ('{"type": "acceptedConnection", "uavpass": "' +
                                        str(uav_instance.uavpass) + '" }', uav_instance.client_socket_id))
 
-        # elif json_msg['uavpass'] != uav_instance.uavpass:
-        #    print(json_msg['uavpass'], uav_instance.uavpass)
-        #    await sio.emit(
-        #        'message', ('{"type": "rejectedConnection"}', socket_recipient_id))
+        elif json_msg['uavpass'] != str(uav_instance.uavpass):
+            print(json_msg['uavpass'], uav_instance.uavpass)
+            await sio.emit(
+                'message', ('{"type": "rejectedConnection"}', socket_recipient_id))
 
-        elif json_msg['type'] == 'disconnectUav':
+        elif 'type' not in json_msg:
+            return
+
+        elif json_msg['type'] == 'disconnect':
             print("UAV disconnected. ID: " + str(socket_recipient_id))
             uav_instance.client_socket_id = None
 
