@@ -16,8 +16,14 @@ async def pixhawk_handler_msg(msg, socket_recipient_id, sio, uav_instance):
         if uav_instance.client_socket_id == None:
             uav_instance.client_socket_id = socket_recipient_id
             print("--> UAV connected to client id: " + str(socket_recipient_id))
-            await sio.emit('message', ('{"type": "acceptedConnection", "uavpass": "' +
-                                       str(uav_instance.uavpass) + '" }', uav_instance.client_socket_id))
+            msg_dict = {
+                "type": "acceptedConnection",
+                "uavpass": uav_instance.uavpass,
+                "lat": uav_instance.uav_state.lat,
+                "lon": uav_instance.uav_state.lon,
+                "health": uav_instance.uav_state.health
+            }
+            await sio.emit('message', (json.dumps(msg_dict), uav_instance.client_socket_id))
 
         elif json_msg['uavpass'] != str(uav_instance.uavpass):
             print(json_msg['uavpass'], uav_instance.uavpass)
@@ -41,10 +47,13 @@ async def pixhawk_handler_msg(msg, socket_recipient_id, sio, uav_instance):
             await sio.emit('message', (json.dumps(
                 {'type': 'batteryCheck', 'battery_percent': response}), uav_instance.client_socket_id))
 
-        elif json_msg['type'] == 'armUav':
-            await uav_instance.arm()
+        elif json_msg['type'] == 'arm':
+            await uav_instance.arm(sio, uav_instance.client_socket_id)
 
-        elif json_msg['type'] == 'takeOffUav':
-            await uav_instance.take_off()
+        elif json_msg['type'] == 'disarm':
+            await uav_instance.disarm(sio, uav_instance.client_socket_id)
+
+        elif json_msg['type'] == 'takeoff':
+            await uav_instance.take_off(sio, uav_instance.client_socket_id)
     finally:
         pass

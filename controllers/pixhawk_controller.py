@@ -109,21 +109,31 @@ class PixhawkController:
         }
         return json.dumps(status_dict)
 
-    async def arm(self):
+    async def arm(self, sio, client_socket_id):
         try:
             await self.uav.action.arm()
+            await sio.emit('message', (json.dumps({'type': 'armed'}), client_socket_id))
             print("UAV armed")
         except Exception as e:
-            print(f"Errorarming UAV: {e}")
+            print(f"Error arming UAV: {e}")
 
-    async def take_off(self):
+    async def disarm(self, sio, client_socket_id):
+        try:
+            await self.uav.action.disarm()
+            await sio.emit('message', (json.dumps({'type': 'disarmed'}), client_socket_id))
+            print("UAV disarmed")
+        except Exception as e:
+            print(f"Error disarming UAV: {e}")
+
+    async def take_off(self, sio, client_socket_id):
         try:
             await self.uav.action.takeoff()
+            await sio.emit('message', (json.dumps({'type': 'accepted_takeoff'}), client_socket_id))
             print("UAV taking off")
         except Exception as e:
             print(f"Error taking off UAV: {e}")
 
-# disarm
+
 # land
 # goto
 
@@ -134,6 +144,16 @@ class PixhawkController:
             async for health in self.uav.telemetry.health():
                 if health.is_global_position_ok and health.is_home_position_ok:
                     self.uav_state.health = True
+                    if self.uav_state.waypoints is None and self.uav_state.lat != 0:
+                        self.uav_state.waypoints = []
+                        home_waypoint = {
+                            "type": "takeoff",
+                            "lat": self.uav_state.lat,
+                            "lon": self.uav_state.lon,
+                            "alt": 0,
+                            "dist": 0
+                        }
+                        self.uav_state.waypoints[0] = home_waypoint
                 return
         except Exception as e:
             print(f"Error checking health: {e}")
